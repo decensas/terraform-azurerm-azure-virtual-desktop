@@ -32,3 +32,12 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "main
   workspace_id         = azurerm_virtual_desktop_workspace.main.id
   application_group_id = azurerm_virtual_desktop_application_group.main.id
 }
+
+resource "time_static" "registration_token_expiration" {
+  # TODO: add trigger to rotate when new PS DSC extension is added
+}
+
+resource "azurerm_virtual_desktop_host_pool_registration_info" "main" {
+  hostpool_id     = azurerm_virtual_desktop_host_pool.main.id
+  expiration_date = timeadd(time_static.registration_token_expiration.rfc3339, "24h")
+}
