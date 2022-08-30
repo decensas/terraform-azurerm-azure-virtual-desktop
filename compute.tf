@@ -62,6 +62,10 @@ resource "azurerm_virtual_machine_extension" "hostpool_join" {
   name               = "DSC"
   virtual_machine_id = azurerm_windows_virtual_machine.main[count.index].id
 
+  depends_on = [
+    azurerm_virtual_machine_extension.aad_join
+  ]
+
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
