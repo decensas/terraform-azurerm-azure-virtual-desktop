@@ -1,0 +1,32 @@
+name: pre-commit
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  TERRAFORM_VERSION: 1.2.8
+
+jobs:
+  pre-commit:
+    name: Pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Terraform
+        run: |
+          curl -sSO https://releases.hashicorp.com/terraform/${{ env.TERRAFORM_VERSION }}/terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip
+          sudo unzip -qq terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip terraform -d /usr/bin/
+          rm terraform_${{ env.TERRAFORM_VERSION }}_linux_amd64.zip 2> /dev/null
+      - name: Install pre-commit
+        run: |
+          sudo apt update
+          sudo apt install -y unzip software-properties-common python3 python3-pip
+          python3 -m pip install --upgrade pip
+          pip3 install --no-cache-dir pre-commit
+          pip3 install --no-cache-dir checkov
+          curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E -m 1 "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && tar -xzf terraform-docs.tgz terraform-docs && rm terraform-docs.tgz && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run pre-commit
+        run: pre-commit run --all-files --color always --show-diff-on-failure
