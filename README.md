@@ -1,5 +1,5 @@
 # azurerm-azure-virtual-desktop
-Terraform module for deploying Azure Virtual Desktop. Deploys a signle personal or shared host pool.
+Terraform module for deploying Azure Virtual Desktop. Deploys a single personal or shared host pool.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
