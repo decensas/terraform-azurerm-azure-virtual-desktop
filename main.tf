@@ -3,7 +3,7 @@ resource "azurerm_virtual_desktop_host_pool" "main" {
   resource_group_name = var.resource_group_name
 
   name                  = local.host_pool_name
-  custom_rdp_properties = local.custom_rdp_properties
+  custom_rdp_properties = local.custom_rdp_properties != "" ? "${local.custom_rdp_properties};" : null
   type                  = var.host_pool_type
   load_balancer_type    = local.host_pool_load_balancer_type
 
