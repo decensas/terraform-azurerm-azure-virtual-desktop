@@ -61,7 +61,7 @@ No modules.
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags that will be applied to all deployed resources. | `map(string)` | `{}` | no |
 | <a name="input_virtual_machine_name_format"></a> [virtual\_machine\_name\_format](#input\_virtual\_machine\_name\_format) | The format of the VM names. The string is var.system\_name. The number is the VM number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-vm%02d"` | no |
-| <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the hosts. E.g. `Standard_D2s_v3`. | `string` | n/a | yes |
+| <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the hosts. E.g. `Standard_D2s_v3`. See [Microsoft Docs: VM sizes](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes). | `string` | n/a | yes |
 | <a name="input_workspace_name_override"></a> [workspace\_name\_override](#input\_workspace\_name\_override) | Overrides the default name for the workspace. Defaults to `<var.system_name>-workspace`. | `string` | `""` | no |
 
 ## Outputs

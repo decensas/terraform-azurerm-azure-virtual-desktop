@@ -20,7 +20,7 @@ variable "host_location" {
 
 variable "vm_size" {
   type        = string
-  description = "The size of the hosts. E.g. `Standard_D2s_v3`."
+  description = "The size of the hosts. E.g. `Standard_D2s_v3`. See [Microsoft Docs: VM sizes](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes)."
 }
 
 variable "subnet_id" {
