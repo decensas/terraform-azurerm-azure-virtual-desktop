@@ -5,5 +5,8 @@ locals {
 
   host_pool_load_balancer_type = var.host_pool_type == "Personal" ? "Persistent" : var.host_pool_load_balancer_type
 
-  custom_rdp_properties = var.aad_joined_allow_access_from_nonjoined ? "targetisaadjoined:i:1" : ""
+  custom_rdp_properties = join(";", flatten([
+    var.custom_rdp_properties,
+    var.aad_joined_allow_access_from_nonjoined ? "targetisaadjoined:i:1" : null
+  ]))
 }

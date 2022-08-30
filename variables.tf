@@ -65,6 +65,12 @@ variable "desktop_application_group_name_override" {
   default     = ""
 }
 
+variable "custom_rdp_properties" {
+  type        = set(string)
+  description = "Set of strings that will be added as custom RDP properties. E.g.: [\"audiocapturemode:i:1\", \"audiomode:i:0\"]"
+  default     = []
+}
+
 variable "aad_joined_allow_access_from_nonjoined" {
   type        = bool
   description = "Only applicable if using Azure AD authentication: adds a custom RDP property that allows access to the hosts from non-joined clients."
