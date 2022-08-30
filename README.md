@@ -69,6 +69,9 @@ No modules.
 No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
+## :warning: Security note
+>Be aware that the module sets role assignments on the resource group level. Meaning that *admins and users defined in the input variables will be given the same access to other VMs in the same resource group*.
+
 ## Features
  - [X] Azure AD authentication to hosts
  - [ ] Traditional AD authentication to hosts
