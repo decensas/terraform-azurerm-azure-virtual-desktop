@@ -11,4 +11,9 @@ locals {
       var.aad_joined_allow_access_from_nonjoined ? ["targetisaadjoined:i:1"] : [""]
     ])
   )
+
+  local_admin_password = [
+    for i in range(var.number_of_hosts) :
+    var.local_admin_password == "" ? random_password.main[i].result : var.local_admin_password
+  ]
 }

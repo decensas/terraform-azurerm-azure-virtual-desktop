@@ -23,6 +23,36 @@ variable "vm_size" {
   description = "The size of the hosts. E.g. `Standard_D2s_v3`."
 }
 
+variable "host_source_image_reference" {
+  type = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+  description = "The reference to the operating system that will be used in the hosts. You can find this with [az cli](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) or [PowerShell](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage). This should most likely be a variant of Windows 10/11 enterprise multi session-edition or Windows Server."
+
+  default = {
+    offer     = "windows-11"
+    publisher = "microsoftwindowsdesktop"
+    sku       = "win11-21h2-avd"
+    version   = "value"
+  }
+}
+
+variable "local_admin_username" {
+  type        = string
+  description = "The username of the local admin account on the hosts."
+  default     = "azureuser"
+}
+
+variable "local_admin_password" {
+  type        = string
+  description = "The password of the local admin account on the hosts. Defaults to a randomly generated password. This will be saved in state."
+  default     = ""
+  sensitive   = true
+}
+
 variable "number_of_hosts" {
   type        = number
   description = "The number of hosts that will be deployed."

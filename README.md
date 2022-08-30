@@ -8,6 +8,7 @@ Terraform module for deploying Azure Virtual Desktop. Deploys a signle personal 
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.8 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.8.0 |
 
 ## Providers
@@ -15,6 +16,7 @@ Terraform module for deploying Azure Virtual Desktop. Deploys a signle personal 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.8.0 |
 
 ## Modules
@@ -30,6 +32,7 @@ No modules.
 | [azurerm_virtual_desktop_host_pool_registration_info.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_host_pool_registration_info) | resource |
 | [azurerm_virtual_desktop_workspace.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_workspace) | resource |
 | [azurerm_virtual_desktop_workspace_application_group_association.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_workspace_application_group_association) | resource |
+| [random_password.main](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [time_static.registration_token_expiration](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/static) | resource |
 
 ## Inputs
@@ -44,6 +47,9 @@ No modules.
 | <a name="input_host_pool_load_balancer_type"></a> [host\_pool\_load\_balancer\_type](#input\_host\_pool\_load\_balancer\_type) | Only applicable if var.host\_pool\_type is Pooled: Load balancing method used for new users sessions across the availiable hosts. Valid options are: `BreadthFirst`, `DepthFirst`. | `string` | `"BreadthFirst"` | no |
 | <a name="input_host_pool_name_override"></a> [host\_pool\_name\_override](#input\_host\_pool\_name\_override) | Overrides the default name for the host pool. Defaults to `<var.system_name>-hostpool`. | `string` | `""` | no |
 | <a name="input_host_pool_type"></a> [host\_pool\_type](#input\_host\_pool\_type) | The type of the host pool. Valid options are `Personal` or `Pooled` | `string` | n/a | yes |
+| <a name="input_host_source_image_reference"></a> [host\_source\_image\_reference](#input\_host\_source\_image\_reference) | The reference to the operating system that will be used in the hosts. You can find this with [az cli](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) or [PowerShell](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage). This should most likely be a variant of Windows 10/11 enterprise multi session-edition or Windows Server. | <pre>object({<br>    publisher = string<br>    offer     = string<br>    sku       = string<br>    version   = string<br>  })</pre> | <pre>{<br>  "offer": "windows-11",<br>  "publisher": "microsoftwindowsdesktop",<br>  "sku": "win11-21h2-avd",<br>  "version": "value"<br>}</pre> | no |
+| <a name="input_local_admin_password"></a> [local\_admin\_password](#input\_local\_admin\_password) | The password of the local admin account on the hosts. Defaults to a randomly generated password. This will be saved in state. | `string` | `""` | no |
+| <a name="input_local_admin_username"></a> [local\_admin\_username](#input\_local\_admin\_username) | The username of the local admin account on the hosts. | `string` | `"azureuser"` | no |
 | <a name="input_number_of_hosts"></a> [number\_of\_hosts](#input\_number\_of\_hosts) | The number of hosts that will be deployed. | `number` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which to deploy the AVD-resources. | `string` | n/a | yes |
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
