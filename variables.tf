@@ -53,6 +53,18 @@ variable "host_pool_name_override" {
   default     = ""
 }
 
+variable "workspace_name_override" {
+  type        = string
+  description = "Overrides the default name for the workspace. Defaults to `<var.system_name>-workspace`."
+  default     = ""
+}
+
+variable "desktop_application_group_name_override" {
+  type        = string
+  description = "Overrides the default name for the deskop_application_group. Defaults to `<var.system_name>-appgroup`."
+  default     = ""
+}
+
 variable "aad_joined_allow_access_from_nonjoined" {
   type        = bool
   description = "Only applicable if using Azure AD authentication: adds a custom RDP property that allows access to the hosts from non-joined clients."
