@@ -23,7 +23,7 @@ variable "vm_size" {
   description = "The size of the hosts. E.g. `Standard_D2s_v3`."
 }
 
-variable "number_of_host" {
+variable "number_of_hosts" {
   type        = number
   description = "The number of hosts that will be deployed."
 }
@@ -39,11 +39,12 @@ variable "host_pool_type" {
 
 variable "host_pool_load_balancer_type" {
   type        = string
-  description = "Load balancing method used for new users sessions across the availiable hosts. Must be `Persistent` if var.host_pool_type is `Personal`. Valid options are `BreadthFirst`, `DepthFirst` or `Persistent`."
+  description = "Only applicable if var.host_pool_type is Pooled: Load balancing method used for new users sessions across the availiable hosts. Valid options are: `BreadthFirst`, `DepthFirst`."
   validation {
-    condition     = contains(["Persistent", "BreadthFirst", "DepthFirst"], var.host_pool_load_balancer_type)
-    error_message = "The value of var.host_pool_load_balancer_type must be one of: Persistent, BreadthFirst, DepthFirst."
+    condition     = contains(["BreadthFirst", "DepthFirst"], var.host_pool_load_balancer_type)
+    error_message = "The value of var.host_pool_load_balancer_type must be one of: Persistent, BreadthFirst."
   }
+  default = "BreadthFirst"
 }
 
 variable "host_pool_name_override" {
