@@ -7,6 +7,8 @@ resource "azurerm_virtual_desktop_host_pool" "main" {
   type                  = var.host_pool_type
   load_balancer_type    = local.host_pool_load_balancer_type
 
+  personal_desktop_assignment_type = var.host_pool_type == "Personal" ? "Automatic" : null
+
   tags = var.tags
 }
 
@@ -34,7 +36,9 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "main
 }
 
 resource "time_static" "registration_token_expiration" {
-  # TODO: add trigger to rotate when new PS DSC extension is added
+  triggers = {
+    for i, vm in azurerm_windows_virtual_machine.main : i => vm.virtual_machine_id # Recreate when a new VM is added or one is redeployed
+  }
 }
 
 resource "azurerm_virtual_desktop_host_pool_registration_info" "main" {

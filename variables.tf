@@ -23,6 +23,11 @@ variable "vm_size" {
   description = "The size of the hosts. E.g. `Standard_D2s_v3`."
 }
 
+variable "subnet_id" {
+  type        = string
+  description = "The ID of the subnet to where the hosts will be deployed. Must be in the same region as var.host_location."
+}
+
 variable "host_source_image_reference" {
   type = object({
     publisher = string
@@ -36,7 +41,7 @@ variable "host_source_image_reference" {
     offer     = "windows-11"
     publisher = "microsoftwindowsdesktop"
     sku       = "win11-21h2-avd"
-    version   = "value"
+    version   = "latest"
   }
 }
 
@@ -91,8 +96,20 @@ variable "workspace_name_override" {
 
 variable "desktop_application_group_name_override" {
   type        = string
-  description = "Overrides the default name for the deskop_application_group. Defaults to `<var.system_name>-appgroup`."
+  description = "Overrides the default name for the deskop application group. Defaults to `<var.system_name>-appgroup`."
   default     = ""
+}
+
+variable "network_interface_name_format" {
+  type        = string
+  description = "The format of the NIC names. The string is var.system_name. The number is the NIC number. See [format-function](https://www.terraform.io/language/functions/format)."
+  default     = "%s-nic%02d"
+}
+
+variable "virtual_machine_name_format" {
+  type        = string
+  description = "The format of the VM names. The string is var.system_name. The number is the VM number. See [format-function](https://www.terraform.io/language/functions/format)."
+  default     = "%s-vm%02d"
 }
 
 variable "custom_rdp_properties" {
