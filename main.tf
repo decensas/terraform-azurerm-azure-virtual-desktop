@@ -21,3 +21,8 @@ resource "azurerm_virtual_desktop_application_group" "main" {
   type                = "Desktop"
   host_pool_id        = azurerm_virtual_desktop_host_pool.main.id
 }
+
+resource "azurerm_virtual_desktop_workspace_application_group_association" "main" {
+  workspace_id         = azurerm_virtual_desktop_workspace.main.id
+  application_group_id = azurerm_virtual_desktop_application_group.main.id
+}
