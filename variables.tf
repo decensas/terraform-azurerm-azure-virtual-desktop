@@ -53,7 +53,7 @@ variable "local_admin_username" {
 
 variable "local_admin_password" {
   type        = string
-  description = "The password of the local admin account on the hosts. Defaults to a randomly generated password. This will be saved in state."
+  description = "The password of the local admin account on the hosts. Defaults to generating a random password per host. This will be saved in state."
   default     = ""
   sensitive   = true
 }
