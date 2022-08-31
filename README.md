@@ -78,13 +78,20 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_network_interfaces"></a> [network\_interfaces](#output\_network\_interfaces) | An array of the NIC-objects created by this module. |
+| <a name="output_virtual_machines"></a> [virtual\_machines](#output\_virtual\_machines) | An array of the VM-objects created by this module. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## 
 
 ## :warning: Security note
 >Be aware that the module sets role assignments on the resource group level. Meaning that *admins and users defined in the input variables will be given the same access to other VMs in the same resource group*.
 
 ## Features
  - [X] Azure AD authentication to hosts
- - [ ] Traditional AD authentication to hosts
- - [ ] Autoscaling
+ - [ ] #9
+ - [ ] #8
+ - [ ] #7
+ - [ ] #6
