@@ -22,6 +22,10 @@ resource "azurerm_windows_virtual_machine" "main" {
     version   = var.host_source_image_reference.version
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   boot_diagnostics {}
 
   tags = var.tags
@@ -78,7 +82,7 @@ resource "azurerm_virtual_machine_extension" "hostpool_join" {
       hostPoolName          = azurerm_virtual_desktop_host_pool.main.name
       registrationInfoToken = azurerm_virtual_desktop_host_pool_registration_info.main.token
       aadJoin               = true
-
+      aadJoinPreview        = false
     }
   })
 

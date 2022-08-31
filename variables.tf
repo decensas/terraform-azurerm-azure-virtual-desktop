@@ -124,6 +124,30 @@ variable "aad_joined_allow_access_from_nonjoined" {
   default     = true
 }
 
+variable "avd_users_upns" {
+  type        = set(string)
+  description = "Set of user principal names for the users who will be authorized to log into the VMs as regular users."
+  default     = []
+}
+
+variable "avd_admins_upns" {
+  type        = set(string)
+  description = "Set of user principal names for the users who will be authorized to log into the VMs as local administrator."
+  default     = []
+}
+
+variable "avd_users_object_ids" {
+  type        = set(string)
+  description = "Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as regular users. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd_users_upns."
+  default     = []
+}
+
+variable "avd_admins_object_ids" {
+  type        = set(string)
+  description = "Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd_admins_upns."
+  default     = []
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags that will be applied to all deployed resources."
