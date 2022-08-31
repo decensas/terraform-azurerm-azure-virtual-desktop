@@ -7,3 +7,4 @@ repos:
       args:
         - '--args=--lockfile=false'
     - id: terraform_validate
+      exclude: ^(examples)/
