@@ -1,6 +1,84 @@
 # azurerm-azure-virtual-desktop
 Terraform module for deploying Azure Virtual Desktop. Deploys a single personal or shared host pool.
 
+## Examples
+Here are some short examples with referenced resources cut out. See [examples](./examples)-directory for full examples.
+
+### Shared hosts with user-assignments
+This method is useful if you want each user to have their own assignment and you want to maintain access with Terraform. [Full example here](./examples/user-assigned-shared/main.tf).
+```terraform
+module "avd" {
+  source = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.0"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  vm_size                      = "Standard_D2s_v3"
+  number_of_hosts              = 3
+  host_pool_type               = "Pooled"
+  host_pool_load_balancer_type = "BreadthFirst"
+
+  avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
+  avd_admins_upns = ["admin@domain.com"]
+
+  subnet_id = azurerm_subnet.main.id
+}
+```
+
+### Shared hosts with group-assignments
+This method is useful if you have Azure AD groups that you want to assign as users and admins, giving you the possibility to add assignments manually. [Full example here](./examples/groups-assigned-shared/main.tf).
+
+A variation of this can also be used where you enter object ids directly into `avd_users_object_ids` and `avd_admins_object_ids`. This is useful if Terraform doesn't have Directory.Read-access to Azure AD.
+
+>Note that the values of `avd_users_object_ids` and `avd_admins_object_ids` must already be known to Terraform at apply, meaning they can't depend on resources being deployed in the same step.
+```terraform
+module "avd" {
+  source = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.0"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  vm_size                      = "Standard_D2s_v3"
+  number_of_hosts              = 3
+  host_pool_type               = "Pooled"
+  host_pool_load_balancer_type = "BreadthFirst"
+
+  avd_admins_object_ids = [data.azuread_group.admins.object_id]
+  avd_users_object_ids  = [data.azuread_group.users.object_id]
+
+  subnet_id = azurerm_subnet.main.id
+}
+```
+
+### Personal hosts
+This is an example on how to deploy personal hosts. The hosts will be assigned when a user first logs in and the assignments will last unitl manually unassigned. Keep in mind that the users will still have access to other hosts through RDP if the network permits it. [Full example here](./examples/user-assigned-personal/).
+```terraform
+module "avd" {
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.0"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  vm_size         = "Standard_D2s_v3"
+  number_of_hosts = 3
+  host_pool_type  = "Personal"
+
+  avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
+  avd_admins_upns = ["admin@domain.com"]
+
+  subnet_id = azurerm_subnet.main.id
+}
+```
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -84,7 +162,8 @@ No modules.
 | <a name="output_virtual_machines"></a> [virtual\_machines](#output\_virtual\_machines) | An array of the VM-objects created by this module. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-## 
+## :information_source: Users with MFA required
+>If you're assigning users with MFA required, do note that they need to connect from a client that is joined to the same Azure AD and using Windows 10 2004 or later using either the Windows Client or Microsoft Edge. If this isn't a possibility, you must exclude the [Windows VM Login application from MFA](https://docs.microsoft.com/en-us/azure/virtual-desktop/set-up-mfa) using Azure AD Conditional Access. If set up correctly, MFA will still be required to use the Azure Virtual Desktop application.
 
 ## :warning: Security note
 >Be aware that the module sets role assignments on the resource group level. Meaning that *admins and users defined in the input variables will be given the same access to other VMs in the same resource group*.
