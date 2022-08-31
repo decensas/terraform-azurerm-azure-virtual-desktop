@@ -88,5 +88,8 @@ resource "azurerm_virtual_machine_extension" "hostpool_join" {
 
   lifecycle {
     ignore_changes = [settings]
+    replace_triggered_by = [
+      azurerm_virtual_desktop_host_pool.main
+    ]
   }
 }

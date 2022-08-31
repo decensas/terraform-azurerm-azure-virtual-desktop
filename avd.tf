@@ -27,6 +27,12 @@ resource "azurerm_virtual_desktop_application_group" "main" {
   type                = "Desktop"
   host_pool_id        = azurerm_virtual_desktop_host_pool.main.id
 
+  lifecycle {
+    replace_triggered_by = [
+      azurerm_virtual_desktop_host_pool.main
+    ]
+  }
+
   tags = var.tags
 }
 
