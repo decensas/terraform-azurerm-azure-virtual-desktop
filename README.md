@@ -170,7 +170,7 @@ No modules.
 
 ## Features
  - [X] Azure AD authentication to hosts
- - [ ] #9
- - [ ] #8
- - [ ] #7
- - [ ] #6
+ - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9
+ - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8
+ - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/7
+ - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/6
