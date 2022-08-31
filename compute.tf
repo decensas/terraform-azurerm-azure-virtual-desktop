@@ -28,6 +28,12 @@ resource "azurerm_windows_virtual_machine" "main" {
 
   boot_diagnostics {}
 
+  lifecycle {
+    replace_triggered_by = [
+      azurerm_virtual_desktop_host_pool.main
+    ]
+  }
+
   tags = var.tags
 }
 
