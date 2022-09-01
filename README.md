@@ -86,14 +86,8 @@ module "avd" {
 ```
 
 ### Availability set
-This example shows how to deploy an availability set that the VMs will be put into. [Full example here](./examples/availability-set/main.tf).
+This example shows how to make the module deploy an availability set for the VMs. [Full example here](./examples/availability-set/main.tf).
 ```terraform
-resource "azurerm_availability_set" "main" {
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  name                = "d-avd-avail"
-}
-
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
   version = "0.1.1"
@@ -103,7 +97,9 @@ module "avd" {
   data_location       = azurerm_resource_group.main.location
   host_location       = azurerm_resource_group.main.location
 
-  availability_set_id = azurerm_availability_set.main.id
+  use_availability_set                  = true
+  availability_number_of_fault_domains  = 3
+  availability_number_of_update_domains = 20
 
   vm_size         = "Standard_D2s_v3"
   number_of_hosts = 3
