@@ -100,6 +100,12 @@ variable "desktop_application_group_name_override" {
   default     = ""
 }
 
+variable "workspace_friendly_name" {
+  type        = string
+  description = "Gives the ability to give a user-facing name to the AVD workspace. Will by default appear to the user as `<var.system_name>-workspace`."
+  default     = ""
+}
+
 variable "network_interface_name_format" {
   type        = string
   description = "The format of the NIC names. The string is var.system_name. The number is the NIC number. See [format-function](https://www.terraform.io/language/functions/format)."

@@ -8,8 +8,8 @@ Here are some short examples with referenced resources cut out. See [examples](.
 This method is useful if you want each user to have their own assignment and you want to maintain access with Terraform. [Full example here](./examples/user-assigned-shared/main.tf).
 ```terraform
 module "avd" {
-  source = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -24,6 +24,8 @@ module "avd" {
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
 
+  workspace_friendly_name = "User assigned shared hosts"
+
   subnet_id = azurerm_subnet.main.id
 }
 ```
@@ -36,8 +38,8 @@ A variation of this can also be used where you enter object ids directly into `a
 >Note that the values of `avd_users_object_ids` and `avd_admins_object_ids` must already be known to Terraform at apply, meaning they can't depend on resources being deployed in the same step.
 ```terraform
 module "avd" {
-  source = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -52,6 +54,8 @@ module "avd" {
   avd_admins_object_ids = [data.azuread_group.admins.object_id]
   avd_users_object_ids  = [data.azuread_group.users.object_id]
 
+  workspace_friendly_name = "Groups assigned shared hosts"
+
   subnet_id = azurerm_subnet.main.id
 }
 ```
@@ -61,7 +65,7 @@ This is an example on how to deploy personal hosts. The hosts will be assigned w
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -75,9 +79,19 @@ module "avd" {
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
 
+  workspace_friendly_name = "User assigned personal hosts"
+
   subnet_id = azurerm_subnet.main.id
 }
 ```
+
+### Availability set
+This example shows how to deploy an availability set that the VMs will be put into. [Full example here](./examples/availability-set/main.tf).
+```terraform
+```
+
+### Availability zones
+This example shows how to enable availability zones. Each of the three VMs in this example will be put into individual zones. [Full example here](./examples/availability-zones/main.tf).
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -154,6 +168,7 @@ No modules.
 | <a name="input_use_availability_zones"></a> [use\_availability\_zones](#input\_use\_availability\_zones) | Whether or not to put the VMs into [availability zones](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview). Both the VM location (`var.host_location`) and SKU (`var.vm_size`) must support availability zones. Use [`az vm list-skus -l <location> --zone`](https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-skus). Must be false if `var.availability_set_id` is set. | `bool` | `false` | no |
 | <a name="input_virtual_machine_name_format"></a> [virtual\_machine\_name\_format](#input\_virtual\_machine\_name\_format) | The format of the VM names. The string is var.system\_name. The number is the VM number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-vm%02d"` | no |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the hosts. E.g. `Standard_D2s_v3`. See [Microsoft Docs: VM sizes](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes). | `string` | n/a | yes |
+| <a name="input_workspace_friendly_name"></a> [workspace\_friendly\_name](#input\_workspace\_friendly\_name) | Gives the ability to give a user-facing name to the AVD workspace. Will by default appear to the user as `<var.system_name>-workspace`. | `string` | `""` | no |
 | <a name="input_workspace_name_override"></a> [workspace\_name\_override](#input\_workspace\_name\_override) | Overrides the default name for the workspace. Defaults to `<var.system_name>-workspace`. | `string` | `""` | no |
 
 ## Outputs
