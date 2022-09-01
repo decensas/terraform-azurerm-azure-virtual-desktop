@@ -9,10 +9,12 @@ resource "azurerm_windows_virtual_machine" "main" {
   admin_username        = var.local_admin_username
   admin_password        = local.local_admin_password[count.index]
 
+  zone                = var.use_availability_zones ? count.index % 3 + 1 : null
+  availability_set_id = var.availability_set_id != "" ? var.availability_set_id : null
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
-
   }
 
   source_image_reference {
