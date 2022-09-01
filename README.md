@@ -239,7 +239,7 @@ No modules.
 
 ## Features
  - [X] Azure AD authentication to hosts
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/7
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/6
+ - [ ] [Autoscale plans](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9)
+ - [ ] [Personal user profile roaming using fslogix](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8)
+ - [X] [Infrastructure redundancy](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/7)
+ - [ ] [Add flags for default RDP properties](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/6)
