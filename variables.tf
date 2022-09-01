@@ -148,6 +148,18 @@ variable "avd_admins_object_ids" {
   default     = []
 }
 
+variable "use_availability_zones" {
+  type        = bool
+  description = "Whether or not to put the VMs into [availability zones](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview). Both the VM location (`var.host_location`) and SKU (`var.vm_size`) must support availability zones. Use [`az vm list-skus -l <location> --zone`](https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-skus). Must be false if `var.availability_set_id` is set."
+  default     = false
+}
+
+variable "availability_set_id" {
+  type        = string
+  description = "The ID of an availability set to put the VMs into. Conflicts with `var.use_availability_zones`."
+  default     = ""
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags that will be applied to all deployed resources."
