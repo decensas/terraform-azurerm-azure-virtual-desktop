@@ -154,16 +154,29 @@ variable "avd_admins_object_ids" {
   default     = []
 }
 
-variable "use_availability_zones" {
+variable "use_availability_set" {
   type        = bool
-  description = "Whether or not to put the VMs into [availability zones](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview). Both the VM location (`var.host_location`) and SKU (`var.vm_size`) must support availability zones. Use [`az vm list-skus -l <location> --zone`](https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-skus). Must be false if `var.availability_set_id` is set."
+  description = "Should the VMs be deployed to an availability set?"
   default     = false
 }
 
-variable "availability_set_id" {
-  type        = string
-  description = "The ID of an availability set to put the VMs into. Conflicts with `var.use_availability_zones`."
-  default     = ""
+variable "availability_number_of_fault_domains" {
+  type        = number
+  description = "The number of fault domains to configure for the availability set. The number of supported domains varies from region to region. [See a list here](https://github.com/MicrosoftDocs/azure-docs/blob/main/includes/managed-disks-common-fault-domain-region-list.md). Requires `var.use_availability_sets` to be true."
+  default     = 2
+}
+
+variable "availability_number_of_update_domains" {
+  type        = number
+  description = "The number of update domains to configure for the availability set. Must be between 1 and 20. Requires `var.use_availability_set` to be true."
+  default     = 5
+  validation {
+    condition = (
+      var.availability_number_of_update_domains >= 1 &&
+      var.availability_number_of_update_domains <= 20
+    )
+    error_message = "The value of var.availability_number_of_update_domains must be between 1 and 20."
+  }
 }
 
 variable "tags" {

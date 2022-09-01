@@ -173,6 +173,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [azurerm_availability_set.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/availability_set) | resource |
 | [azurerm_network_interface.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
 | [azurerm_role_assignment.admins](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.appgroup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -196,7 +197,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aad_joined_allow_access_from_nonjoined"></a> [aad\_joined\_allow\_access\_from\_nonjoined](#input\_aad\_joined\_allow\_access\_from\_nonjoined) | Only applicable if using Azure AD authentication: adds a custom RDP property that allows access to the hosts from non-joined clients. | `bool` | `true` | no |
-| <a name="input_availability_set_id"></a> [availability\_set\_id](#input\_availability\_set\_id) | The ID of an availability set to put the VMs into. Conflicts with `var.use_availability_zones`. | `string` | `""` | no |
+| <a name="input_availability_number_of_fault_domains"></a> [availability\_number\_of\_fault\_domains](#input\_availability\_number\_of\_fault\_domains) | The number of fault domains to configure for the availability set. The number of supported domains varies from region to region. [See a list here](https://github.com/MicrosoftDocs/azure-docs/blob/main/includes/managed-disks-common-fault-domain-region-list.md). Requires `var.use_availability_sets` to be true. | `number` | `2` | no |
+| <a name="input_availability_number_of_update_domains"></a> [availability\_number\_of\_update\_domains](#input\_availability\_number\_of\_update\_domains) | The number of update domains to configure for the availability set. Must be between 1 and 20. Requires `var.use_availability_set` to be true. | `number` | `5` | no |
 | <a name="input_avd_admins_object_ids"></a> [avd\_admins\_object\_ids](#input\_avd\_admins\_object\_ids) | Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd\_admins\_upns. | `set(string)` | `[]` | no |
 | <a name="input_avd_admins_upns"></a> [avd\_admins\_upns](#input\_avd\_admins\_upns) | Set of user principal names for the users who will be authorized to log into the VMs as local administrator. | `set(string)` | `[]` | no |
 | <a name="input_avd_users_object_ids"></a> [avd\_users\_object\_ids](#input\_avd\_users\_object\_ids) | Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as regular users. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd\_users\_upns. | `set(string)` | `[]` | no |
@@ -217,7 +219,7 @@ No modules.
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet to where the hosts will be deployed. Must be in the same region as var.host\_location. | `string` | n/a | yes |
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags that will be applied to all deployed resources. | `map(string)` | `{}` | no |
-| <a name="input_use_availability_zones"></a> [use\_availability\_zones](#input\_use\_availability\_zones) | Whether or not to put the VMs into [availability zones](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview). Both the VM location (`var.host_location`) and SKU (`var.vm_size`) must support availability zones. Use [`az vm list-skus -l <location> --zone`](https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-list-skus). Must be false if `var.availability_set_id` is set. | `bool` | `false` | no |
+| <a name="input_use_availability_set"></a> [use\_availability\_set](#input\_use\_availability\_set) | Should the VMs be deployed to an availability set? | `bool` | `false` | no |
 | <a name="input_virtual_machine_name_format"></a> [virtual\_machine\_name\_format](#input\_virtual\_machine\_name\_format) | The format of the VM names. The string is var.system\_name. The number is the VM number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-vm%02d"` | no |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the hosts. E.g. `Standard_D2s_v3`. See [Microsoft Docs: VM sizes](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes). | `string` | n/a | yes |
 | <a name="input_workspace_friendly_name"></a> [workspace\_friendly\_name](#input\_workspace\_friendly\_name) | Gives the ability to give a user-facing name to the AVD workspace. Will by default appear to the user as `<var.system_name>-workspace`. | `string` | `""` | no |
