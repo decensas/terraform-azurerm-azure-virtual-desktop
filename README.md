@@ -8,8 +8,8 @@ Here are some short examples with referenced resources cut out. See [examples](.
 This method is useful if you want each user to have their own assignment and you want to maintain access with Terraform. [Full example here](./examples/user-assigned-shared/main.tf).
 ```terraform
 module "avd" {
-  source = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -24,6 +24,8 @@ module "avd" {
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
 
+  workspace_friendly_name = "User assigned shared hosts"
+
   subnet_id = azurerm_subnet.main.id
 }
 ```
@@ -36,8 +38,8 @@ A variation of this can also be used where you enter object ids directly into `a
 >Note that the values of `avd_users_object_ids` and `avd_admins_object_ids` must already be known to Terraform at apply, meaning they can't depend on resources being deployed in the same step.
 ```terraform
 module "avd" {
-  source = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -52,6 +54,8 @@ module "avd" {
   avd_admins_object_ids = [data.azuread_group.admins.object_id]
   avd_users_object_ids  = [data.azuread_group.users.object_id]
 
+  workspace_friendly_name = "Groups assigned shared hosts"
+
   subnet_id = azurerm_subnet.main.id
 }
 ```
@@ -61,7 +65,7 @@ This is an example on how to deploy personal hosts. The hosts will be assigned w
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -74,6 +78,37 @@ module "avd" {
 
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
+
+  workspace_friendly_name = "User assigned personal hosts"
+
+  subnet_id = azurerm_subnet.main.id
+}
+```
+
+### Availability set
+This example shows how to make the module deploy an availability set for the VMs. [Full example here](./examples/availability-set/main.tf).
+```terraform
+module "avd" {
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  use_availability_set                  = true
+  availability_number_of_fault_domains  = 3
+  availability_number_of_update_domains = 20
+
+  vm_size         = "Standard_D2s_v3"
+  number_of_hosts = 3
+  host_pool_type  = "Personal"
+
+  avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
+  avd_admins_upns = ["admin@domain.com"]
+
+  workspace_friendly_name = "Availability set"
 
   subnet_id = azurerm_subnet.main.id
 }
@@ -107,6 +142,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [azurerm_availability_set.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/availability_set) | resource |
 | [azurerm_network_interface.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
 | [azurerm_role_assignment.admins](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.appgroup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -130,6 +166,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aad_joined_allow_access_from_nonjoined"></a> [aad\_joined\_allow\_access\_from\_nonjoined](#input\_aad\_joined\_allow\_access\_from\_nonjoined) | Only applicable if using Azure AD authentication: adds a custom RDP property that allows access to the hosts from non-joined clients. | `bool` | `true` | no |
+| <a name="input_availability_number_of_fault_domains"></a> [availability\_number\_of\_fault\_domains](#input\_availability\_number\_of\_fault\_domains) | The number of fault domains to configure for the availability set. The number of supported domains varies from region to region. [See a list here](https://github.com/MicrosoftDocs/azure-docs/blob/main/includes/managed-disks-common-fault-domain-region-list.md). Requires `var.use_availability_sets` to be true. | `number` | `2` | no |
+| <a name="input_availability_number_of_update_domains"></a> [availability\_number\_of\_update\_domains](#input\_availability\_number\_of\_update\_domains) | The number of update domains to configure for the availability set. Must be between 1 and 20. Requires `var.use_availability_set` to be true. | `number` | `5` | no |
 | <a name="input_avd_admins_object_ids"></a> [avd\_admins\_object\_ids](#input\_avd\_admins\_object\_ids) | Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd\_admins\_upns. | `set(string)` | `[]` | no |
 | <a name="input_avd_admins_upns"></a> [avd\_admins\_upns](#input\_avd\_admins\_upns) | Set of user principal names for the users who will be authorized to log into the VMs as local administrator. | `set(string)` | `[]` | no |
 | <a name="input_avd_users_object_ids"></a> [avd\_users\_object\_ids](#input\_avd\_users\_object\_ids) | Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as regular users. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd\_users\_upns. | `set(string)` | `[]` | no |
@@ -150,8 +188,10 @@ No modules.
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet to where the hosts will be deployed. Must be in the same region as var.host\_location. | `string` | n/a | yes |
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags that will be applied to all deployed resources. | `map(string)` | `{}` | no |
+| <a name="input_use_availability_set"></a> [use\_availability\_set](#input\_use\_availability\_set) | Should the VMs be deployed to an availability set? | `bool` | `false` | no |
 | <a name="input_virtual_machine_name_format"></a> [virtual\_machine\_name\_format](#input\_virtual\_machine\_name\_format) | The format of the VM names. The string is var.system\_name. The number is the VM number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-vm%02d"` | no |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the hosts. E.g. `Standard_D2s_v3`. See [Microsoft Docs: VM sizes](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes). | `string` | n/a | yes |
+| <a name="input_workspace_friendly_name"></a> [workspace\_friendly\_name](#input\_workspace\_friendly\_name) | Gives the ability to give a user-facing name to the AVD workspace. Will by default appear to the user as `<var.system_name>-workspace`. | `string` | `""` | no |
 | <a name="input_workspace_name_override"></a> [workspace\_name\_override](#input\_workspace\_name\_override) | Overrides the default name for the workspace. Defaults to `<var.system_name>-workspace`. | `string` | `""` | no |
 
 ## Outputs
@@ -170,7 +210,7 @@ No modules.
 
 ## Features
  - [X] Azure AD authentication to hosts
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/7
- - [ ] https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/6
+ - [ ] [Autoscale plans](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9)
+ - [ ] [Personal user profile roaming using fslogix](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8)
+ - [X] [Infrastructure redundancy](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/7)
+ - [ ] [Add flags for default RDP properties](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/6)

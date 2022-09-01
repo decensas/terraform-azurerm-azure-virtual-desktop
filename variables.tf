@@ -100,6 +100,12 @@ variable "desktop_application_group_name_override" {
   default     = ""
 }
 
+variable "workspace_friendly_name" {
+  type        = string
+  description = "Gives the ability to give a user-facing name to the AVD workspace. Will by default appear to the user as `<var.system_name>-workspace`."
+  default     = ""
+}
+
 variable "network_interface_name_format" {
   type        = string
   description = "The format of the NIC names. The string is var.system_name. The number is the NIC number. See [format-function](https://www.terraform.io/language/functions/format)."
@@ -146,6 +152,31 @@ variable "avd_admins_object_ids" {
   type        = set(string)
   description = "Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd_admins_upns."
   default     = []
+}
+
+variable "use_availability_set" {
+  type        = bool
+  description = "Should the VMs be deployed to an availability set?"
+  default     = false
+}
+
+variable "availability_number_of_fault_domains" {
+  type        = number
+  description = "The number of fault domains to configure for the availability set. The number of supported domains varies from region to region. [See a list here](https://github.com/MicrosoftDocs/azure-docs/blob/main/includes/managed-disks-common-fault-domain-region-list.md). Requires `var.use_availability_sets` to be true."
+  default     = 2
+}
+
+variable "availability_number_of_update_domains" {
+  type        = number
+  description = "The number of update domains to configure for the availability set. Must be between 1 and 20. Requires `var.use_availability_set` to be true."
+  default     = 5
+  validation {
+    condition = (
+      var.availability_number_of_update_domains >= 1 &&
+      var.availability_number_of_update_domains <= 20
+    )
+    error_message = "The value of var.availability_number_of_update_domains must be between 1 and 20."
+  }
 }
 
 variable "tags" {

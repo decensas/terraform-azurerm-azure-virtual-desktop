@@ -1,3 +1,11 @@
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "main" {
+  name     = "d-avd-user-assigned-shared"
+  location = "westeurope"
+}
 
 resource "azurerm_virtual_network" "main" {
   name                = "d-avd-vnet"
@@ -29,7 +37,7 @@ resource "azurerm_subnet_network_security_group_association" "main" {
 
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -43,6 +51,8 @@ module "avd" {
 
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
+
+  workspace_friendly_name = "User assigned shared hosts"
 
   subnet_id = azurerm_subnet.main.id
 }

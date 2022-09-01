@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "d-avd"
+  name     = "d-avd-groups-assigned-shared"
   location = "westeurope"
 }
 
@@ -45,7 +45,7 @@ data "azuread_group" "admins" {
 
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.0"
+  version = "0.1.1"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -59,6 +59,8 @@ module "avd" {
 
   avd_admins_object_ids = [data.azuread_group.admins.object_id]
   avd_users_object_ids  = [data.azuread_group.users.object_id]
+
+  workspace_friendly_name = "Groups assigned shared hosts"
 
   subnet_id = azurerm_subnet.main.id
 }

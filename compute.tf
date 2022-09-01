@@ -1,3 +1,10 @@
+resource "azurerm_availability_set" "main" {
+  count               = var.use_availability_set == true ? 1 : 0
+  resource_group_name = var.resource_group_name
+  location            = var.host_location
+  name                = "${var.system_name}-availset"
+}
+
 resource "azurerm_windows_virtual_machine" "main" {
   count               = var.number_of_hosts
   name                = format(var.virtual_machine_name_format, var.system_name, count.index)
@@ -9,10 +16,11 @@ resource "azurerm_windows_virtual_machine" "main" {
   admin_username        = var.local_admin_username
   admin_password        = local.local_admin_password[count.index]
 
+  availability_set_id = one(azurerm_availability_set.main[*].id)
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
-
   }
 
   source_image_reference {

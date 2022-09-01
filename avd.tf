@@ -16,6 +16,7 @@ resource "azurerm_virtual_desktop_workspace" "main" {
   name                = local.workspace_name
   resource_group_name = var.resource_group_name
   location            = var.data_location
+  friendly_name       = var.workspace_friendly_name != "" ? var.workspace_friendly_name : null
 
   tags = var.tags
 }

@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "main" {
-  name     = "d-avd-user-assigned-personal"
+  name     = "d-avd-availability-set"
   location = "westeurope"
 }
 
@@ -44,6 +44,10 @@ module "avd" {
   data_location       = azurerm_resource_group.main.location
   host_location       = azurerm_resource_group.main.location
 
+  use_availability_set                  = true
+  availability_number_of_fault_domains  = 3
+  availability_number_of_update_domains = 20
+
   vm_size         = "Standard_D2s_v3"
   number_of_hosts = 3
   host_pool_type  = "Personal"
@@ -51,7 +55,7 @@ module "avd" {
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
 
-  workspace_friendly_name = "User assigned personal hosts"
+  workspace_friendly_name = "Availability set"
 
   subnet_id = azurerm_subnet.main.id
 }
