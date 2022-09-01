@@ -88,10 +88,62 @@ module "avd" {
 ### Availability set
 This example shows how to deploy an availability set that the VMs will be put into. [Full example here](./examples/availability-set/main.tf).
 ```terraform
+resource "azurerm_availability_set" "main" {
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  name                = "d-avd-avail"
+}
+
+module "avd" {
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  availability_set_id = azurerm_availability_set.main.id
+
+  vm_size         = "Standard_D2s_v3"
+  number_of_hosts = 3
+  host_pool_type  = "Personal"
+
+  avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
+  avd_admins_upns = ["admin@domain.com"]
+
+  workspace_friendly_name = "Availability set"
+
+  subnet_id = azurerm_subnet.main.id
+}
 ```
 
 ### Availability zones
 This example shows how to enable availability zones. Each of the three VMs in this example will be put into individual zones. [Full example here](./examples/availability-zones/main.tf).
+```terraform
+module "avd" {
+  source  = "decensas/azure-virtual-desktop/azurerm"
+  version = "0.1.1"
+
+  system_name         = "avd"
+  resource_group_name = azurerm_resource_group.main.name
+  data_location       = azurerm_resource_group.main.location
+  host_location       = azurerm_resource_group.main.location
+
+  use_availability_zones = true
+
+  vm_size         = "Standard_D2s_v3"
+  number_of_hosts = 3
+  host_pool_type  = "Personal"
+
+  avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
+  avd_admins_upns = ["admin@domain.com"]
+
+  workspace_friendly_name = "Availability zones"
+
+  subnet_id = azurerm_subnet.main.id
+}
+```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
