@@ -211,6 +211,9 @@ No modules.
 ## :warning: Security note
 >Be aware that the module sets role assignments on the resource group level. Meaning that *admins and users defined in the input variables will be given the same access to other VMs in the same resource group*.
 
+## Feature: Start VM on connect
+>You can enable the [Start VM on Connect](https://learn.microsoft.com/en-us/azure/virtual-desktop/start-virtual-machine-connect)-feature by setting `var.start_vm_on_connect`. This will allocate deallocated VMs on user sign-in when required. It will not stop and/or deallocate running VMs. Separate automation can be set up for deallocation of unused hosts.
+
 ## Roadmap
  - [X] Azure AD authentication to hosts
  - [ ] [Autoscale plans](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9)
