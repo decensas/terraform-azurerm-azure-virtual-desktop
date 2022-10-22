@@ -6,7 +6,7 @@ resource "azurerm_virtual_desktop_host_pool" "main" {
   custom_rdp_properties = local.custom_rdp_properties != "" ? "${local.custom_rdp_properties};" : null
   type                  = var.host_pool_type
   load_balancer_type    = local.host_pool_load_balancer_type
-  start_vm_on_connect   = var.start_hosts_on_connect
+  start_vm_on_connect   = var.start_vm_on_connect
 
   personal_desktop_assignment_type = var.host_pool_type == "Personal" ? "Automatic" : null
 

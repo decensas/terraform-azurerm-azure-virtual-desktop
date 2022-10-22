@@ -187,7 +187,7 @@ No modules.
 | <a name="input_network_interface_name_format"></a> [network\_interface\_name\_format](#input\_network\_interface\_name\_format) | The format of the NIC names. The string is var.system\_name. The number is the NIC number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-nic%02d"` | no |
 | <a name="input_number_of_hosts"></a> [number\_of\_hosts](#input\_number\_of\_hosts) | The number of hosts that will be deployed. | `number` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which to deploy the AVD-resources. | `string` | n/a | yes |
-| <a name="input_start_hosts_on_connect"></a> [start\_hosts\_on\_connect](#input\_start\_hosts\_on\_connect) | Will enable automatic start of hosts on connection when required. Separate automation is required to stop and deallocate hosts. | `bool` | `false` | no |
+| <a name="input_start_vm_on_connect"></a> [start\_vm\_on\_connect](#input\_start\_vm\_on\_connect) | Will enable automatic start of hosts on connection when required. Separate automation is required to stop and deallocate hosts. | `bool` | `false` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet to where the hosts will be deployed. Must be in the same region as var.host\_location. | `string` | n/a | yes |
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags that will be applied to all deployed resources. | `map(string)` | `{}` | no |

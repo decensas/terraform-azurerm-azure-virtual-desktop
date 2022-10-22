@@ -32,7 +32,7 @@ resource "azurerm_role_assignment" "appgroup" {
 }
 
 resource "azurerm_role_assignment" "start_on_connect" {
-  count                = var.start_hosts_on_connect == true ? 1 : 0
+  count                = var.start_vm_on_connect == true ? 1 : 0
   role_definition_name = "Desktop Virtualization Power On Contributor"
   principal_id         = data.azuread_service_principal.avd.object_id
   scope                = local.resource_group_id

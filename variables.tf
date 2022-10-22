@@ -63,7 +63,7 @@ variable "number_of_hosts" {
   description = "The number of hosts that will be deployed."
 }
 
-variable "start_hosts_on_connect" {
+variable "start_vm_on_connect" {
   type        = bool
   description = "Will enable automatic start of hosts on connection when required. Separate automation is required to stop and deallocate hosts."
   default     = false
