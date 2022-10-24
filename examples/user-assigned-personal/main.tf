@@ -37,16 +37,17 @@ resource "azurerm_subnet_network_security_group_association" "main" {
 
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
   data_location       = azurerm_resource_group.main.location
   host_location       = azurerm_resource_group.main.location
 
-  vm_size         = "Standard_D2s_v3"
-  number_of_hosts = 3
-  host_pool_type  = "Personal"
+  vm_size             = "Standard_D2s_v3"
+  number_of_hosts     = 3
+  host_pool_type      = "Personal"
+  start_vm_on_connect = true
 
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]

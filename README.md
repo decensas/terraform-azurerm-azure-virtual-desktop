@@ -9,7 +9,7 @@ This method is useful if you want each user to have their own assignment and you
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -39,7 +39,7 @@ A variation of this can also be used where you enter object ids directly into `a
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -65,16 +65,17 @@ This is an example on how to deploy personal hosts. The hosts will be assigned w
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
   data_location       = azurerm_resource_group.main.location
   host_location       = azurerm_resource_group.main.location
 
-  vm_size         = "Standard_D2s_v3"
-  number_of_hosts = 3
-  host_pool_type  = "Personal"
+  vm_size             = "Standard_D2s_v3"
+  number_of_hosts     = 3
+  host_pool_type      = "Personal"
+  start_vm_on_connect = true
 
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
@@ -90,7 +91,7 @@ This example shows how to make the module deploy an availability set for the VMs
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
