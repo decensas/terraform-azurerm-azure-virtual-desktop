@@ -23,6 +23,7 @@ resource "azurerm_windows_virtual_machine" "main" {
     storage_account_type = "StandardSSD_LRS"
   }
 
+  license_type = var.license_type
   source_image_reference {
     publisher = var.host_source_image_reference.publisher
     offer     = var.host_source_image_reference.offer

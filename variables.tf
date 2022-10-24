@@ -58,6 +58,16 @@ variable "local_admin_password" {
   sensitive   = true
 }
 
+variable "license_type" {
+  type        = string
+  description = "Specifies a type of on-premises license to be used with the session hosts. Sometimes referred to as Azure Hybrid Benefit. You must have a license with mutli-tenant hosting rights ([Windows Server](https://learn.microsoft.com/en-us/windows-server/get-started/azure-hybrid-benefit) or [Windows 10/11](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/windows-desktop-multitenant-hosting-deployment)). Possible values are `None`, `Windows_Client` and `Windows_Server`."
+  default     = "None"
+  validation {
+    condition     = contains(["None", "Windows_Client", "Windows_Server"], var.license_type)
+    error_message = "The value of var.license type must be one of: None, Windows_Client, Windows_Server"
+  }
+}
+
 variable "number_of_hosts" {
   type        = number
   description = "The number of hosts that will be deployed."
