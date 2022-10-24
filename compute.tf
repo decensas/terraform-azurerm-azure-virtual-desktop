@@ -51,6 +51,7 @@ resource "azurerm_network_interface" "main" {
   location            = var.host_location
   resource_group_name = var.resource_group_name
 
+  enable_accelerated_networking = var.enable_accelerated_networking
   ip_configuration {
     name                          = "default"
     subnet_id                     = var.subnet_id

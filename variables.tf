@@ -185,6 +185,12 @@ variable "availability_number_of_update_domains" {
   }
 }
 
+variable "enable_accelerated_networking" {
+  type        = bool
+  description = "Should accelerated networking be enabled on the hosts? Only supported by [certain vm sizes](https://learn.microsoft.com/en-us/azure/virtual-network/accelerated-networking-overview#supported-vm-instances)."
+  default     = false
+}
+
 variable "tags" {
   type        = map(string)
   description = "Tags that will be applied to all deployed resources."
