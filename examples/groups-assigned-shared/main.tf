@@ -45,7 +45,7 @@ data "azuread_group" "admins" {
 
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name

@@ -9,7 +9,7 @@ This method is useful if you want each user to have their own assignment and you
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -39,7 +39,7 @@ A variation of this can also be used where you enter object ids directly into `a
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -65,16 +65,17 @@ This is an example on how to deploy personal hosts. The hosts will be assigned w
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
   data_location       = azurerm_resource_group.main.location
   host_location       = azurerm_resource_group.main.location
 
-  vm_size         = "Standard_D2s_v3"
-  number_of_hosts = 3
-  host_pool_type  = "Personal"
+  vm_size             = "Standard_D2s_v3"
+  number_of_hosts     = 3
+  host_pool_type      = "Personal"
+  start_vm_on_connect = true
 
   avd_users_upns  = ["user1@domain.com", "user2@domain.com"]
   avd_admins_upns = ["admin@domain.com"]
@@ -90,7 +91,7 @@ This example shows how to make the module deploy an availability set for the VMs
 ```terraform
 module "avd" {
   source  = "decensas/azure-virtual-desktop/azurerm"
-  version = "0.1.1"
+  version = "0.1.2"
 
   system_name         = "avd"
   resource_group_name = azurerm_resource_group.main.name
@@ -146,6 +147,7 @@ No modules.
 | [azurerm_network_interface.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
 | [azurerm_role_assignment.admins](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.appgroup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.start_on_connect](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_role_assignment.users](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_virtual_desktop_application_group.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_application_group) | resource |
 | [azurerm_virtual_desktop_host_pool.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_desktop_host_pool) | resource |
@@ -157,6 +159,7 @@ No modules.
 | [azurerm_windows_virtual_machine.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine) | resource |
 | [random_password.main](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [time_static.registration_token_expiration](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/static) | resource |
+| [azuread_service_principal.avd](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/service_principal) | data source |
 | [azuread_users.admins](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/users) | data source |
 | [azuread_users.users](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/users) | data source |
 | [azurerm_subscription.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
@@ -175,16 +178,19 @@ No modules.
 | <a name="input_custom_rdp_properties"></a> [custom\_rdp\_properties](#input\_custom\_rdp\_properties) | Set of strings that will be added as custom RDP properties. E.g.: ["audiocapturemode:i:1", "audiomode:i:0"] | `set(string)` | `[]` | no |
 | <a name="input_data_location"></a> [data\_location](#input\_data\_location) | The location to which metadata-resources will be deployed. This includes the host-pool, application group and workspace. Location of the virtual machines is defined by var.host\_location. See [Data locations for Azure Virtual Desktop](https://docs.microsoft.com/en-us/azure/virtual-desktop/data-locations). | `string` | n/a | yes |
 | <a name="input_desktop_application_group_name_override"></a> [desktop\_application\_group\_name\_override](#input\_desktop\_application\_group\_name\_override) | Overrides the default name for the deskop application group. Defaults to `<var.system_name>-appgroup`. | `string` | `""` | no |
+| <a name="input_enable_accelerated_networking"></a> [enable\_accelerated\_networking](#input\_enable\_accelerated\_networking) | Should accelerated networking be enabled on the hosts? Only supported by [certain vm sizes](https://learn.microsoft.com/en-us/azure/virtual-network/accelerated-networking-overview#supported-vm-instances). | `bool` | `false` | no |
 | <a name="input_host_location"></a> [host\_location](#input\_host\_location) | The location to which the hosts (VMs) will be deployed. | `string` | n/a | yes |
 | <a name="input_host_pool_load_balancer_type"></a> [host\_pool\_load\_balancer\_type](#input\_host\_pool\_load\_balancer\_type) | Only applicable if var.host\_pool\_type is Pooled: Load balancing method used for new users sessions across the availiable hosts. Valid options are: `BreadthFirst`, `DepthFirst`. | `string` | `"BreadthFirst"` | no |
 | <a name="input_host_pool_name_override"></a> [host\_pool\_name\_override](#input\_host\_pool\_name\_override) | Overrides the default name for the host pool. Defaults to `<var.system_name>-hostpool`. | `string` | `""` | no |
 | <a name="input_host_pool_type"></a> [host\_pool\_type](#input\_host\_pool\_type) | The type of the host pool. Valid options are `Personal` or `Pooled` | `string` | n/a | yes |
 | <a name="input_host_source_image_reference"></a> [host\_source\_image\_reference](#input\_host\_source\_image\_reference) | The reference to the operating system that will be used in the hosts. You can find this with [az cli](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) or [PowerShell](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage). This should most likely be a variant of Windows 10/11 enterprise multi session-edition or Windows Server. | <pre>object({<br>    publisher = string<br>    offer     = string<br>    sku       = string<br>    version   = string<br>  })</pre> | <pre>{<br>  "offer": "windows-11",<br>  "publisher": "microsoftwindowsdesktop",<br>  "sku": "win11-21h2-avd",<br>  "version": "latest"<br>}</pre> | no |
+| <a name="input_license_type"></a> [license\_type](#input\_license\_type) | Specifies a type of on-premises license to be used with the session hosts. Sometimes referred to as Azure Hybrid Benefit. You must have a license with mutli-tenant hosting rights ([Windows Server](https://learn.microsoft.com/en-us/windows-server/get-started/azure-hybrid-benefit) or [Windows 10/11](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/windows-desktop-multitenant-hosting-deployment)). Possible values are `None`, `Windows_Client` and `Windows_Server`. | `string` | `"None"` | no |
 | <a name="input_local_admin_password"></a> [local\_admin\_password](#input\_local\_admin\_password) | The password of the local admin account on the hosts. Defaults to generating a random password per host. This will be saved in state. | `string` | `""` | no |
 | <a name="input_local_admin_username"></a> [local\_admin\_username](#input\_local\_admin\_username) | The username of the local admin account on the hosts. | `string` | `"azureuser"` | no |
 | <a name="input_network_interface_name_format"></a> [network\_interface\_name\_format](#input\_network\_interface\_name\_format) | The format of the NIC names. The string is var.system\_name. The number is the NIC number. See [format-function](https://www.terraform.io/language/functions/format). | `string` | `"%s-nic%02d"` | no |
 | <a name="input_number_of_hosts"></a> [number\_of\_hosts](#input\_number\_of\_hosts) | The number of hosts that will be deployed. | `number` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group in which to deploy the AVD-resources. | `string` | n/a | yes |
+| <a name="input_start_vm_on_connect"></a> [start\_vm\_on\_connect](#input\_start\_vm\_on\_connect) | Will enable automatic start of hosts on connection when required. Separate automation is required to stop and deallocate hosts. | `bool` | `false` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet to where the hosts will be deployed. Must be in the same region as var.host\_location. | `string` | n/a | yes |
 | <a name="input_system_name"></a> [system\_name](#input\_system\_name) | The main name of the system. Will be used as a part of naming for multiple resources. | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags that will be applied to all deployed resources. | `map(string)` | `{}` | no |
@@ -208,7 +214,10 @@ No modules.
 ## :warning: Security note
 >Be aware that the module sets role assignments on the resource group level. Meaning that *admins and users defined in the input variables will be given the same access to other VMs in the same resource group*.
 
-## Features
+## Feature: Start VM on connect
+>You can enable the [Start VM on Connect](https://learn.microsoft.com/en-us/azure/virtual-desktop/start-virtual-machine-connect)-feature by setting `var.start_vm_on_connect`. This will allocate deallocated VMs on user sign-in when required. It will not stop and/or deallocate running VMs. Separate automation can be set up for deallocation of unused hosts.
+
+## Roadmap
  - [X] Azure AD authentication to hosts
  - [ ] [Autoscale plans](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/9)
  - [ ] [Personal user profile roaming using fslogix](https://github.com/decensas/terraform-azurerm-azure-virtual-desktop/issues/8)
