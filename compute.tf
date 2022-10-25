@@ -108,4 +108,6 @@ resource "azurerm_virtual_machine_extension" "hostpool_join" {
       azurerm_virtual_desktop_host_pool.main.id
     ]
   }
+
+  tags = var.tags
 }
