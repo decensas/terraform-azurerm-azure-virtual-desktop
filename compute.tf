@@ -23,6 +23,7 @@ resource "azurerm_windows_virtual_machine" "main" {
     storage_account_type = "StandardSSD_LRS"
   }
 
+  license_type = var.license_type
   source_image_reference {
     publisher = var.host_source_image_reference.publisher
     offer     = var.host_source_image_reference.offer
@@ -38,7 +39,7 @@ resource "azurerm_windows_virtual_machine" "main" {
 
   lifecycle {
     replace_triggered_by = [
-      azurerm_virtual_desktop_host_pool.main
+      azurerm_virtual_desktop_host_pool.main.id
     ]
   }
 
@@ -51,6 +52,7 @@ resource "azurerm_network_interface" "main" {
   location            = var.host_location
   resource_group_name = var.resource_group_name
 
+  enable_accelerated_networking = var.enable_accelerated_networking
   ip_configuration {
     name                          = "default"
     subnet_id                     = var.subnet_id
@@ -103,7 +105,9 @@ resource "azurerm_virtual_machine_extension" "hostpool_join" {
   lifecycle {
     ignore_changes = [settings]
     replace_triggered_by = [
-      azurerm_virtual_desktop_host_pool.main
+      azurerm_virtual_desktop_host_pool.main.id
     ]
   }
+
+  tags = var.tags
 }
