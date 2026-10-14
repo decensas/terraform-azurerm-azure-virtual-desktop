@@ -35,12 +35,12 @@ variable "host_source_image_reference" {
     sku       = string
     version   = string
   })
-  description = "The reference to the operating system that will be used in the hosts. You can find this with [az cli](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage) or [PowerShell](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage). This should most likely be a variant of Windows 10/11 enterprise multi session-edition or Windows Server."
+  description = "The marketplace image used for session hosts. The default is Windows 11 Enterprise multi-session 26H2. Override this object to select another supported Azure Virtual Desktop image."
 
   default = {
     offer     = "windows-11"
     publisher = "microsoftwindowsdesktop"
-    sku       = "win11-21h2-avd"
+    sku       = "win11-26h2-avd"
     version   = "latest"
   }
 }
@@ -142,7 +142,7 @@ variable "custom_rdp_properties" {
 
 variable "aad_joined_allow_access_from_nonjoined" {
   type        = bool
-  description = "Only applicable if using Azure AD authentication: adds a custom RDP property that allows access to the hosts from non-joined clients."
+  description = "Only applicable when using Microsoft Entra ID authentication: adds a custom RDP property that allows access to the hosts from non-joined clients."
   default     = true
 }
 
@@ -160,13 +160,13 @@ variable "avd_admins_upns" {
 
 variable "avd_users_object_ids" {
   type        = set(string)
-  description = "Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as regular users. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd_users_upns."
+  description = "Set of object IDs of the identities (Microsoft Entra ID users or groups) who will be authorized to log into the VMs as regular users. Useful if the identity running Terraform doesn't have directory read access or if you wish to assign a group, otherwise use var.avd_users_upns."
   default     = []
 }
 
 variable "avd_admins_object_ids" {
   type        = set(string)
-  description = "Set of object IDs of the identites (Azure AD users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have Directory.Read-access to Azure AD or if you wish to assign a group, otherwise use var.avd_admins_upns."
+  description = "Set of object IDs of the identities (Microsoft Entra ID users or groups) who will be authorized to log into the VMs as local administrator. Useful if the identity running Terraform doesn't have directory read access or if you wish to assign a group, otherwise use var.avd_admins_upns."
   default     = []
 }
 
@@ -178,7 +178,7 @@ variable "use_availability_set" {
 
 variable "availability_number_of_fault_domains" {
   type        = number
-  description = "The number of fault domains to configure for the availability set. The number of supported domains varies from region to region. [See a list here](https://github.com/MicrosoftDocs/azure-docs/blob/main/includes/managed-disks-common-fault-domain-region-list.md). Requires `var.use_availability_sets` to be true."
+  description = "The number of fault domains to configure for the availability set. The number of supported domains varies by region. Requires `var.use_availability_set` to be true."
   default     = 2
 }
 

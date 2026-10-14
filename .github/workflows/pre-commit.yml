@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  TERRAFORM_VERSION: 1.2.8
+  TERRAFORM_VERSION: 1.16.6
 
 jobs:
   pre-commit:
