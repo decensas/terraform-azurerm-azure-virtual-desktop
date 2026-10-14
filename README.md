@@ -218,6 +218,8 @@ No modules.
 ## :information_source: Users with MFA required
 >If you're assigning users with MFA requirements, review Microsoft's current guidance for [Microsoft Entra joined session hosts](https://learn.microsoft.com/azure/virtual-desktop/azure-ad-joined-session-hosts) and [Azure Virtual Desktop MFA](https://learn.microsoft.com/azure/virtual-desktop/set-up-mfa). Client and Conditional Access requirements depend on the authentication method in use.
 
+The module retains historical `aad_*` variable and resource names for compatibility with existing consumers. These settings refer to Microsoft Entra ID authentication.
+
 ## :warning: Security note
 >VM login and Start VM on Connect role assignments are scoped to the session host VMs managed by this module. The Desktop Virtualization User role remains scoped to the desktop application group. Terraform state contains session host registration tokens and local administrator passwords; use an encrypted remote backend and restrict state access.
 
