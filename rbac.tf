@@ -15,32 +15,20 @@ data "azuread_service_principal" "avd" {
 
 locals {
   avd_user_vm_role_assignments = {
-    for assignment in flatten([
-      for vm_index, vm in azurerm_windows_virtual_machine.main : [
-        for principal_id in local.avd_users_object_ids : {
-          key          = "${vm_index}-${principal_id}"
-          vm_id        = vm.id
-          principal_id = principal_id
-        }
-      ]
-    ]) : assignment.key => assignment
+    for assignment in setproduct(local.avd_users_object_ids, azurerm_windows_virtual_machine.main) :
+    "${assignment[1].name}-${assignment[0]}" => {
+      vm_id        = assignment[1].id
+      principal_id = assignment[0]
+    }
   }
 
   avd_admin_vm_role_assignments = {
-    for assignment in flatten([
-      for vm_index, vm in azurerm_windows_virtual_machine.main : [
-        for principal_id in local.avd_admins_object_ids : {
-          key          = "${vm_index}-${principal_id}"
-          vm_id        = vm.id
-          principal_id = principal_id
-        }
-      ]
-    ]) : assignment.key => assignment
+    for assignment in setproduct(local.avd_admins_object_ids, azurerm_windows_virtual_machine.main) :
+    "${assignment[1].name}-${assignment[0]}" => {
+      vm_id        = assignment[1].id
+      principal_id = assignment[0]
+    }
   }
-
-  avd_start_on_connect_vm_ids = var.start_vm_on_connect ? {
-    for vm_index, vm in azurerm_windows_virtual_machine.main : tostring(vm_index) => vm.id
-  } : {}
 }
 
 resource "azurerm_role_assignment" "users" {
@@ -65,7 +53,7 @@ resource "azurerm_role_assignment" "appgroup" {
 }
 
 resource "azurerm_role_assignment" "start_on_connect" {
-  for_each             = local.avd_start_on_connect_vm_ids
+  for_each             = var.start_vm_on_connect ? { for index, vm in azurerm_windows_virtual_machine.main : tostring(index) => vm.id } : {}
   role_definition_name = "Desktop Virtualization Power On Contributor"
   principal_id         = data.azuread_service_principal.avd.object_id
   scope                = each.value

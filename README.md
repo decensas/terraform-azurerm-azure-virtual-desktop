@@ -5,7 +5,7 @@ The module requires Terraform 1.5 or later, AzureRM 5.x, AzureAD 3.x, Random 3.x
 
 ## Session host image and registration
 
-The default session host image is Windows 11 Enterprise multi-session 26H2 (`win11-26h2-avd`). Override `host_source_image_reference` to use another supported image. The module downloads the current Azure Virtual Desktop Agent and Boot Loader from Microsoft's stable download links and registers each VM with the host pool.
+The default session host image is Windows 11 Enterprise multi-session 26H2 (`win11-26h2-avd`). Override `host_source_image_reference` to use another supported image. The module uses the PowerShell template at `templates/register-session-host.ps1` to download the current Azure Virtual Desktop Agent and Boot Loader and register each VM with the host pool.
 
 The registration token is sent to the VM extension using `protected_settings`, but Terraform still stores sensitive values in state. Use an encrypted remote backend and restrict state access.
 
