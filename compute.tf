@@ -1,8 +1,19 @@
+locals {
+  avd_session_host_registration_script = templatefile("${path.module}/templates/register-session-host.ps1", {
+    registration_token = azurerm_virtual_desktop_host_pool_registration_info.main.token
+  })
+}
+
 resource "azurerm_availability_set" "main" {
   count               = var.use_availability_set == true ? 1 : 0
   resource_group_name = var.resource_group_name
   location            = var.host_location
   name                = "${var.system_name}-availset"
+
+  platform_fault_domain_count  = var.availability_number_of_fault_domains
+  platform_update_domain_count = var.availability_number_of_update_domains
+
+  tags = var.tags
 }
 
 resource "azurerm_windows_virtual_machine" "main" {
@@ -52,7 +63,7 @@ resource "azurerm_network_interface" "main" {
   location            = var.host_location
   resource_group_name = var.resource_group_name
 
-  enable_accelerated_networking = var.enable_accelerated_networking
+  accelerated_networking_enabled = var.enable_accelerated_networking
   ip_configuration {
     name                          = "default"
     subnet_id                     = var.subnet_id
@@ -79,31 +90,23 @@ resource "azurerm_virtual_machine_extension" "aad_join" {
 resource "azurerm_virtual_machine_extension" "hostpool_join" {
   count = var.number_of_hosts
 
-  name               = "DSC"
+  name               = "RegisterSessionHost"
   virtual_machine_id = azurerm_windows_virtual_machine.main[count.index].id
 
   depends_on = [
     azurerm_virtual_machine_extension.aad_join
   ]
 
-  publisher                  = "Microsoft.Powershell"
-  type                       = "DSC"
-  type_handler_version       = "2.73"
+  publisher                  = "Microsoft.Compute"
+  type                       = "CustomScriptExtension"
+  type_handler_version       = "1.10"
   auto_upgrade_minor_version = true
 
-  settings = jsonencode({
-    modulesUrl            = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_08-10-2022.zip"
-    configurationFunction = "Configuration.ps1\\AddSessionHost"
-    properties = {
-      hostPoolName          = azurerm_virtual_desktop_host_pool.main.name
-      registrationInfoToken = azurerm_virtual_desktop_host_pool_registration_info.main.token
-      aadJoin               = true
-      aadJoinPreview        = false
-    }
+  protected_settings = jsonencode({
+    commandToExecute = "powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand ${textencodebase64(local.avd_session_host_registration_script, "UTF-16LE")}"
   })
 
   lifecycle {
-    ignore_changes = [settings]
     replace_triggered_by = [
       azurerm_virtual_desktop_host_pool.main.id
     ]

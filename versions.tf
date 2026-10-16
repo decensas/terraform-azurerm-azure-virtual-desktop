@@ -1,15 +1,15 @@
 terraform {
-  required_version = ">= 1.2.8" # Also update terraform version in .github/workflows/pre-commit.yml
+  required_version = ">= 1.5.0" # Also update terraform version in .github/workflows/pre-commit.yml
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 5.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.0"
+      version = "~> 3.0"
     }
 
     random = {
@@ -19,7 +19,7 @@ terraform {
 
     time = {
       source  = "hashicorp/time"
-      version = "~> 0.8.0"
+      version = "~> 0.13.0"
     }
   }
 }

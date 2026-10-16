@@ -1,6 +1,4 @@
 locals {
-  resource_group_id = "/subscriptions/${data.azurerm_subscription.main.subscription_id}/resourceGroups/${var.resource_group_name}"
-
   host_pool_name                 = var.host_pool_name_override == "" ? "${var.system_name}-hostpool" : var.host_pool_name_override
   workspace_name                 = var.workspace_name_override == "" ? "${var.system_name}-workspace" : var.workspace_name_override
   desktop_application_group_name = var.desktop_application_group_name_override == "" ? "${var.system_name}-appgroup" : var.desktop_application_group_name_override

@@ -1,5 +1,3 @@
-data "azurerm_subscription" "main" {}
-
 resource "random_password" "main" {
   count       = var.number_of_hosts
   length      = 30
